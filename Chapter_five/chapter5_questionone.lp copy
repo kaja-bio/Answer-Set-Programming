@@ -1,0 +1,37 @@
+%%file chapter5_questionone.lp
+
+class(animals).
+class(lions).
+class(babylions).
+
+is_subclass(lions, animals).
+is_subclass(babylions, lions).
+
+subclass(C1, C2) :- is_subclass(C1, C2).
+subclass(C1, C2) :- is_subclass(C1, C3), subclass(C3, C2).
+
+member(X, C) :- is_a(X, C).
+member(X, C) :- is_a(X, C0), subclass(C0, C).   
+
+siblings(C1, C2) :- is_subclass(C1, C), is_subclass(C2, C), C1 != C2.
+-member(X, C2) :- member(X, C1), siblings(C1, C2), C1 != C2, not member(X, C2).
+    
+is_a(apollo, lions).
+is_a(helios, babylions).
+is_a(new_baby, babylions).
+
+dangerous(X) :- member(X, lions),
+    not ab(d1(X)),
+    not -dangerous(X).
+
+-dangerous(X) :- member(X, babylions),
+    not ab(d2(X)),
+    not dangerous(X).
+
+ab(d1(X)) :- member(X, animals), not member(X, lions), not -member(X, lions).
+ab(d2(X)) :- member(X, lions), not member(X, babylions), not -member(X, babylions).
+    
+-dangerous(apollo).
+
+#show dangerous/1.
+#show -dangerous/1.
